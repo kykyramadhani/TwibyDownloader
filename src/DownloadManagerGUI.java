@@ -44,6 +44,14 @@ public class DownloadManagerGUI {
         newTaskButton.setBorder(new EmptyBorder(8, 20, 8, 20));
         headerPanel.add(newTaskButton);
 
+        RoundedButton viewSourceButton = new RoundedButton("View Source");
+        viewSourceButton.setFont(new Font("Arial", Font.BOLD, 14));
+        viewSourceButton.setBackground(BLEU_DE_FRANCE);
+        viewSourceButton.setForeground(Color.WHITE);
+        viewSourceButton.setFocusPainted(false);
+        viewSourceButton.setBorder(new EmptyBorder(8, 20, 8, 20));
+        headerPanel.add(viewSourceButton);
+
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         downloadListPanel = new JPanel();
@@ -63,6 +71,69 @@ public class DownloadManagerGUI {
             if (url != null && !url.isEmpty()) {
                 startDownload(url, fileSize);
             }
+        });
+
+        viewSourceButton.addActionListener(e -> {
+            JDialog inputDialog = new JDialog(frame, "Enter URL", true);
+            inputDialog.setSize(400, 150);
+            inputDialog.setLocationRelativeTo(frame);
+            inputDialog.setLayout(new BorderLayout());
+
+            JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+            contentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+            contentPanel.setBackground(Color.WHITE);
+
+            JLabel label = new JLabel("Enter URL to view source:");
+            JTextField urlField = new JTextField();
+
+            contentPanel.add(label, BorderLayout.NORTH);
+            contentPanel.add(urlField, BorderLayout.CENTER);
+
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.setBackground(Color.WHITE);
+
+            RoundedButton okButton = new RoundedButton("OK");
+            RoundedButton cancelButton = new RoundedButton("Cancel");
+
+            buttonPanel.add(okButton);
+            buttonPanel.add(cancelButton);
+
+            contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+            inputDialog.add(contentPanel);
+
+            // Action tombol
+            okButton.addActionListener(ev -> {
+                String url = urlField.getText().trim();
+                if (!url.isEmpty()) {
+                    try {
+                        String source = WebUtils.readWebsiteSource(url);
+
+                        JDialog sourceDialog = new JDialog(frame, "Website Source", true);
+                        sourceDialog.setSize(700, 500);
+                        sourceDialog.setLocationRelativeTo(frame);
+
+                        JTextArea textArea = new JTextArea(source, 30, 80);
+                        textArea.setFont(new Font("Consolas", Font.PLAIN, 12));
+                        textArea.setLineWrap(true);
+                        textArea.setWrapStyleWord(true);
+                        textArea.setEditable(false);
+
+                        JScrollPane sourceScrollPane = new JScrollPane(textArea);
+                        sourceScrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+                        sourceDialog.add(sourceScrollPane, BorderLayout.CENTER);
+                        sourceDialog.setVisible(true);
+
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                    }
+                }
+                inputDialog.dispose();
+            });
+
+            cancelButton.addActionListener(ev -> inputDialog.dispose());
+
+            inputDialog.setVisible(true);
         });
 
         frame.setContentPane(mainPanel);
@@ -139,6 +210,35 @@ class DownloadItemPanel extends JPanel {
         statusLabel.setForeground(QUILL_GREY.darker());
         gbc.gridy = 2;
         add(statusLabel, gbc);
+    }
+
+    private JTextArea sourceArea;
+    // 🔹 Constructor baru → untuk View Source
+    public DownloadItemPanel(String urlString, String source) {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.decode("#DDDDDD"), 1),
+                new EmptyBorder(10, 15, 10, 15)));
+        setBackground(Color.WHITE);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
+        setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel titleLabel = new JLabel("Website Source: " + urlString);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        titleLabel.setForeground(CHARCOAL);
+
+        sourceArea = new JTextArea(source);
+        sourceArea.setLineWrap(true);
+        sourceArea.setWrapStyleWord(true);
+        sourceArea.setEditable(false);
+        sourceArea.setFont(new Font("Consolas", Font.PLAIN, 12));
+
+        JScrollPane scrollPane = new JScrollPane(sourceArea);
+        scrollPane.setPreferredSize(new Dimension(600, 200));
+        scrollPane.setBorder(BorderFactory.createLineBorder(QUILL_GREY));
+
+        add(titleLabel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public JProgressBar getProgressBar() { return progressBar; }
