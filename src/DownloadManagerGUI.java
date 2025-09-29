@@ -22,7 +22,7 @@ public class DownloadManagerGUI {
     }
 
     private void createAndShowGUI() {
-        frame = new JFrame("Pro Download Manager");
+        frame = new JFrame("TwibyDownloader");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);

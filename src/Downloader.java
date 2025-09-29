@@ -10,7 +10,7 @@ public class Downloader extends SwingWorker<Void, Object> {
     private final String urlString;
     private final JProgressBar progressBar;
     private final JLabel statusLabel;
-    private final long knownFileSize; // File size passed from dialog
+    private final long knownFileSize;
 
     public Downloader(String urlString, JProgressBar progressBar, JLabel statusLabel, long knownFileSize) {
         this.urlString = urlString;
