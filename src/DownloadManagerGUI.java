@@ -211,36 +211,6 @@ class DownloadItemPanel extends JPanel {
         gbc.gridy = 2;
         add(statusLabel, gbc);
     }
-
-    private JTextArea sourceArea;
-    // 🔹 Constructor baru → untuk View Source
-    public DownloadItemPanel(String urlString, String source) {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.decode("#DDDDDD"), 1),
-                new EmptyBorder(10, 15, 10, 15)));
-        setBackground(Color.WHITE);
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
-        setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel titleLabel = new JLabel("Website Source: " + urlString);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        titleLabel.setForeground(CHARCOAL);
-
-        sourceArea = new JTextArea(source);
-        sourceArea.setLineWrap(true);
-        sourceArea.setWrapStyleWord(true);
-        sourceArea.setEditable(false);
-        sourceArea.setFont(new Font("Consolas", Font.PLAIN, 12));
-
-        JScrollPane scrollPane = new JScrollPane(sourceArea);
-        scrollPane.setPreferredSize(new Dimension(600, 200));
-        scrollPane.setBorder(BorderFactory.createLineBorder(QUILL_GREY));
-
-        add(titleLabel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-    }
-
     public JProgressBar getProgressBar() { return progressBar; }
     public JLabel getStatusLabel() { return statusLabel; }
 }
